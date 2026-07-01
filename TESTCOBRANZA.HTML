@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tests de Cobranza – MaxiKash</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            background: #f4f7fc;
+            padding: 20px;
+            color: #1a2a3a;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+            padding: 30px 35px 45px;
+        }
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            color: #0b2b4a;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        h1 small {
+            font-size: 16px;
+            font-weight: 400;
+            color: #5e7a93;
+            margin-left: 8px;
+        }
+        .subtitle {
+            color: #3a5b77;
+            border-left: 4px solid #1a7fbc;
+            padding-left: 14px;
+            margin: 6px 0 28px 0;
+            font-size: 15px;
+            background: #eef5fa;
+            border-radius: 0 12px 12px 0;
+            line-height: 1.5;
+            padding: 10px 16px;
+        }
+        .selector {
+            margin-bottom: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px 18px;
+            background: #f0f5fb;
+            padding: 16px 22px;
+            border-radius: 16px;
+        }
+        .selector label {
+            font-weight: 600;
+            font-size: 15px;
+            color: #1a3a5a;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .selector select {
+            flex: 1;
+            min-width: 240px;
+            padding: 10px 16px;
+            border-radius: 40px;
+            border: 1px solid #cbdae6;
+            background: white;
+            font-size: 15px;
+            font-weight: 500;
+            color: #0b2b4a;
+            outline: none;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+        .selector select:focus {
+            border-color: #1a7fbc;
+            box-shadow: 0 0 0 3px rgba(26, 127, 188, 0.15);
+        }
+        .test-info {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px 16px;
+            margin-bottom: 18px;
+            font-size: 14px;
+            color: #2b4a66;
+            background: #f8fafc;
+            padding: 10px 16px;
+            border-radius: 12px;
+            border: 1px solid #e2e9f0;
+        }
+        .test-info span {
+            font-weight: 500;
+        }
+        .question-card {
+            background: #ffffff;
+            border: 1px solid #e6edf5;
+            border-radius: 18px;
+            padding: 20px 24px 18px;
+            margin-bottom: 16px;
+            transition: 0.15s;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+        .question-card:hover {
+            border-color: #b8cee2;
+        }
+        .q-header {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .q-number {
+            background: #1a7fbc;
+            color: white;
+            font-weight: 700;
+            font-size: 14px;
+            border-radius: 30px;
+            padding: 0 12px;
+            height: 28px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 32px;
+        }
+        .q-text {
+            font-weight: 500;
+            font-size: 16px;
+            color: #0b2b4a;
+            line-height: 1.4;
+        }
+        .options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+            margin-top: 6px;
+        }
+        .option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #f9fcff;
+            padding: 10px 16px;
+            border-radius: 40px;
+            border: 1px solid #e2ebf4;
+            transition: 0.15s;
+            cursor: pointer;
+        }
+        .option:hover {
+            background: #eef6fe;
+            border-color: #b0cde0;
+        }
+        .option input[type="radio"] {
+            accent-color: #1a7fbc;
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+        .option label {
+            flex: 1;
+            cursor: pointer;
+            font-size: 15px;
+            color: #1f3b54;
+            padding: 2px 0;
+        }
+        .option.correct {
+            background: #e1f5e8;
+            border-color: #2c9e6b;
+        }
+        .option.correct label {
+            color: #0f5a3a;
+        }
+        .option.incorrect {
+            background: #fde8e8;
+            border-color: #d65a5a;
+        }
+        .option.incorrect label {
+            color: #8f2e2e;
+        }
+        .option.disabled {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+        .feedback {
+            margin-top: 12px;
+            padding: 10px 16px;
+            border-radius: 10px;
+            font-size: 14px;
+            background: #f3f7fb;
+            border-left: 4px solid #b0cde0;
+            color: #1f3b54;
+            display: none;
+        }
+        .feedback.show {
+            display: block;
+        }
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 28px;
+            gap: 16px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e9f0;
+        }
+        .btn {
+            background: white;
+            border: 1px solid #b8cee2;
+            padding: 11px 30px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 15px;
+            color: #1a3a5a;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-primary {
+            background: #1a7fbc;
+            border-color: #1a7fbc;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #0e6aa3;
+            border-color: #0e6aa3;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 14px rgba(26, 127, 188, 0.25);
+        }
+        .btn-secondary {
+            background: #eef5fa;
+            border-color: #cbdae6;
+        }
+        .btn-secondary:hover {
+            background: #e2ebf4;
+        }
+        .btn:disabled {
+            opacity: 0.4;
+            pointer-events: none;
+        }
+        .score-box {
+            background: #f0f7fe;
+            border-radius: 40px;
+            padding: 8px 22px;
+            font-weight: 600;
+            font-size: 18px;
+            color: #0b2b4a;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .score-box span {
+            color: #1a7fbc;
+            font-size: 22px;
+        }
+        .no-questions {
+            text-align: center;
+            padding: 40px 20px;
+            color: #5e7a93;
+            font-size: 16px;
+        }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 13px;
+            color: #6b8aa3;
+            border-top: 1px solid #e2e9f0;
+            padding-top: 22px;
+        }
+        @media (max-width: 600px) {
+            .container { padding: 18px 16px; }
+            .selector { flex-direction: column; align-items: stretch; }
+            .question-card { padding: 16px; }
+            .q-text { font-size: 15px; }
+            .actions { flex-direction: column; align-items: stretch; }
+            .btn { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>
+        📋 Tests de Cobranza
+        <small>MaxiKash</small>
+    </h1>
+    <div class="subtitle">
+        Selecciona un puesto y responde las 10 preguntas para evaluar tu conocimiento.
+    </div>
+
+    <div class="selector">
+        <label for="puestoSelect">👤 Puesto:</label>
+        <select id="puestoSelect"></select>
+        <button class="btn btn-secondary" id="resetBtn" style="padding: 8px 20px;">⟲ Reiniciar</button>
+    </div>
+
+    <div id="testContainer">
+        <div class="no-questions">Cargando preguntas...</div>
+    </div>
+
+    <div class="actions" id="actionsArea" style="display:none;">
+        <div>
+            <button class="btn btn-primary" id="gradeBtn">✅ Calificar Test</button>
+            <button class="btn btn-secondary" id="clearBtn" style="margin-left:10px;">🧹 Limpiar respuestas</button>
+        </div>
+        <div class="score-box" id="scoreBox">
+            🏆 <span id="scoreDisplay">0/10</span>
+        </div>
+    </div>
+
+    <div class="footer">
+        © 2026 MaxiKash · Tests de conocimientos para puestos de cobranza
+    </div>
+</div>
+
+<script>
+// ============================================================
+// DATOS EXTRAÍDOS DEL CSV (primer bloque, 11 puestos × 10 preguntas)
+// ============================================================
+const testData = [
+    {
+        puesto: "GESTOR DE COBRANZA 1-7 (Cartera Pequeña)",
+        preguntas: [
+            { pregunta: "¿Cuál es el objetivo principal del puesto de Gestor de Cobranza 1-7 Créditos?",
+              opciones: ["Gestionar la cobranza de clientes con más de 30 créditos activos.",
+                         "Administrar y recuperar eficientemente la cartera asignada de clientes con entre 1 y 7 créditos activos, mediante estrategias de cobranza preventiva y seguimiento oportuno.",
+                         "Realizar únicamente cobranza telefónica sin contacto con el cliente.",
+                         "Diseñar la estrategia de crédito para nuevos clientes."],
+              correcta: 1 },
+            { pregunta: "¿Cuántos clientes máximo debe gestionar un Gestor de Cobranza 1-7 Créditos en su cartera asignada?",
+              opciones: ["1 cliente.", "7 clientes.", "15 clientes.", "30 clientes."],
+              correcta: 1 },
+            { pregunta: "¿Cuál de las siguientes actividades es parte de las responsabilidades diarias del Gestor de Cobranza 1-7 Créditos?",
+              opciones: ["Realizar análisis detallado de capacidad de pago individual por cliente.",
+                         "Aprobar nuevos créditos para clientes.",
+                         "Diseñar campañas de marketing para la empresa.",
+                         "Gestionar la nómina del personal."],
+              correcta: 0 },
+            { pregunta: "¿Qué herramientas tecnológicas debe utilizar el Gestor de Cobranza 1-7 Créditos para realizar su trabajo?",
+              opciones: ["LEGACY app, GPS, WhatsApp y Microsoft Office 365 Enterprise.",
+                         "Únicamente un teléfono fijo.",
+                         "Software de diseño gráfico y redes sociales.",
+                         "Sistema de marcación automática exclusivamente."],
+              correcta: 0 },
+            { pregunta: "¿Cuál es la meta de Índice de Mora (PAR) Personal que debe cumplir el Gestor de Cobranza 1-7 Créditos?",
+              opciones: ["Menor al 5%.", "Menor al 3%.", "Menor al 1.5% (Muy estricto).", "No tiene meta establecida."],
+              correcta: 2 },
+            { pregunta: "¿Cuántas gestiones efectivas por cliente debe realizar el Gestor de Cobranza 1-7 Créditos mensualmente?",
+              opciones: ["1-2 gestiones por cliente.", "3-4 gestiones por cliente.", "5-7 gestiones por cliente.", "10-12 gestiones por cliente."],
+              correcta: 2 },
+            { pregunta: "¿Qué competencia conductual es CLAVE para el perfil del Gestor de Cobranza 1-7 Créditos?",
+              opciones: ["Visión estratégica y liderazgo transformacional.",
+                         "Paciencia, empatía, negociación persuasiva y persistencia en seguimiento.",
+                         "Creatividad e innovación tecnológica.",
+                         "Programación avanzada y análisis de big data."],
+              correcta: 1 },
+            { pregunta: "¿Qué debe hacer el Gestor de Cobranza 1-7 Créditos después de cada gestión con un cliente?",
+              opciones: ["Esperar a que el cliente lo contacte nuevamente.",
+                         "Registrar cada gestión en el sistema con detalle de motivos y promesas de pago.",
+                         "Solo anotar en una libreta personal.",
+                         "No es necesario registrar nada."],
+              correcta: 1 },
+            { pregunta: "¿Cuál de las siguientes NO es una responsabilidad del Gestor de Cobranza 1-7 Créditos?",
+              opciones: ["Cumplir con la meta de recuperación asignada con índice PAR cercano a cero.",
+                         "Mantener relación profesional y ética con la cartera asignada.",
+                         "Aprobar descuentos superiores al 50% sin autorización.",
+                         "Ejecutar seguimiento intensivo de clientes críticos o en riesgo."],
+              correcta: 2 },
+            { pregunta: "¿Qué debe salvaguardar el Gestor de Cobranza 1-7 Créditos en el ejercicio de sus funciones?",
+              opciones: ["La confidencialidad de la información de clientes y de la organización.",
+                         "Solo su propia información personal.",
+                         "Los diseños de las motocicletas.",
+                         "Las estrategias de marketing de la competencia."],
+              correcta: 0 }
+        ]
+    },
+    {
+        puesto: "GESTOR DE COBRANZA 8-29 (Cartera Media)",
+        preguntas: [
+            { pregunta: "¿Cuál es el objetivo principal del puesto de Gestor de Cobranza 8-29 Créditos?",
+              opciones: ["Gestionar únicamente clientes con más de 50 créditos activos.",
+                         "Administrar y recuperar de forma efectiva la cartera asignada integrada por clientes con entre 8 y 29 créditos activos, implementando estrategias de negociación, seguimiento y regularización.",
+                         "Realizar exclusivamente cobranza telefónica sin contacto presencial.",
+                         "Diseñar la política de crédito para nuevos productos financieros."],
+              correcta: 1 },
+            { pregunta: "¿Cuántos clientes máximo integran la cartera asignada al Gestor de Cobranza 8-29 Créditos?",
+              opciones: ["7 clientes.", "15 clientes.", "29 clientes.", "50 clientes."],
+              correcta: 2 },
+            { pregunta: "¿Cuál de las siguientes actividades es parte de las responsabilidades del Gestor de Cobranza 8-29 Créditos?",
+              opciones: ["Clasificar clientes por nivel de riesgo y capacidad de pago.",
+                         "Aprobar créditos para nuevos clientes.",
+                         "Diseñar campañas de marketing institucionales.",
+                         "Gestionar la nómina del personal de cobranza."],
+              correcta: 0 },
+            { pregunta: "Según los KPI's, ¿cuál es la meta de Índice de Mora (PAR) Personal que debe cumplir el Gestor de Cobranza 8-29 Créditos?",
+              opciones: ["Menor al 1.5%.", "Menor al 3%.", "Menor al 5%.", "Menor al 10%."],
+              correcta: 1 },
+            { pregunta: "¿Cuántas gestiones efectivas por cliente debe realizar mensualmente el Gestor de Cobranza 8-29 Créditos?",
+              opciones: ["1-2 gestiones por cliente.", "3-4 gestiones por cliente.", "4-6 gestiones por cliente.", "8-10 gestiones por cliente."],
+              correcta: 2 },
+            { pregunta: "¿Qué competencia conductual es CLAVE para el perfil del Gestor de Cobranza 8-29 Créditos?",
+              opciones: ["Visión estratégica y liderazgo transformacional.",
+                         "Organización y planificación de tiempo, análisis de cartera, adaptabilidad según tipo de cliente y negociación flexible.",
+                         "Creatividad e innovación en diseño gráfico.",
+                         "Programación avanzada y análisis de big data."],
+              correcta: 1 },
+            { pregunta: "¿Qué debe hacer el Gestor de Cobranza 8-29 Créditos al identificar un riesgo de incumplimiento en un cliente?",
+              opciones: ["Ignorarlo y esperar a que el cliente pague.",
+                         "Identificar oportunamente riesgos de incumplimiento y comunicar incidencias relevantes a la línea de supervisión.",
+                         "Cancelar el crédito del cliente de inmediato.",
+                         "Aumentar la tasa de interés del crédito."],
+              correcta: 1 },
+            { pregunta: "¿Qué tipo de estrategia de cobro debe diseñar el Gestor de Cobranza 8-29 Créditos?",
+              opciones: ["Una estrategia única para todos los clientes.",
+                         "Una estrategia de cobro diferenciada por perfil de cliente (formal/informal/comercial).",
+                         "Solo estrategias de cobro judicial.",
+                         "Ninguna estrategia, solo esperar a que los clientes paguen."],
+              correcta: 1 },
+            { pregunta: "¿Cuál de las siguientes NO es una responsabilidad del Gestor de Cobranza 8-29 Créditos?",
+              opciones: ["Ejecutar cobros preventivos en cuotas por vencer.",
+                         "Negociar reestructuraciones y planes de pago en casos complejos.",
+                         "Aprobar descuentos superiores al 50% sin autorización de su supervisor.",
+                         "Reportar al supervisor el control de evolución de cartera."],
+              correcta: 2 },
+            { pregunta: "¿Qué herramientas tecnológicas debe utilizar el Gestor de Cobranza 8-29 Créditos para realizar su trabajo?",
+              opciones: ["LEGACY app, GPS, WhatsApp y Microsoft Office 365 Enterprise.",
+                         "Únicamente un teléfono fijo tradicional.",
+                         "Software de diseño gráfico y redes sociales.",
+                         "Sistema de marcación automática exclusivamente."],
+              correcta: 0 }
+        ]
+    },
+    {
+        puesto: "GESTOR DE COBRANZA 30+ (Cartera Grande)",
+        preguntas: [
+            { pregunta: "¿Cuál es el objetivo principal del puesto de Gestor de Cobranza 30+ Créditos?",
+              opciones: ["Gestionar exclusivamente clientes con menos de 7 créditos activos.",
+                         "Liderar la gestión integral de recuperación de cartera de alta complejidad compuesta por clientes con 30 o más créditos activos, mediante estrategias avanzadas de cobranza, análisis de riesgo y negociación especializada.",
+                         "Realizar únicamente cobranza preventiva sin contacto con clientes morosos.",
+                         "Diseñar la política de crédito para nuevos productos financieros."],
+              correcta: 1 },
+            { pregunta: "¿Cuántos créditos activos integran la cartera asignada al Gestor de Cobranza 30+ Créditos?",
+              opciones: ["1 a 7 créditos.", "8 a 29 créditos.", "30 o más créditos.", "50 o más créditos."],
+              correcta: 2 },
+            { pregunta: "¿Cuál de las siguientes actividades es parte de las responsabilidades del Gestor de Cobranza 30+ Créditos?",
+              opciones: ["Segmentar cartera en sub-portfolios según riesgo, producto y sector.",
+                         "Aprobar créditos para nuevos clientes.",
+                         "Diseñar campañas de marketing institucionales.",
+                         "Gestionar la nómina del personal de cobranza."],
+              correcta: 0 },
+            { pregunta: "Según los KPI's, ¿cuál es la meta de Índice de Mora (PAR) Personal que debe cumplir el Gestor de Cobranza 30+ Créditos?",
+              opciones: ["Menor al 1.5%.", "Menor al 2.5% (Cartera de mejor control).", "Menor al 3%.", "Menor al 5%."],
+              correcta: 1 },
+            { pregunta: "¿Qué competencia conductual es CLAVE para el perfil del Gestor de Cobranza 30+ Créditos?",
+              opciones: ["Visión estratégica y liderazgo transformacional exclusivamente.",
+                         "Liderazgo informal, análisis estratégico de cartera, capacidad de decisión en casos complejos y mentalidad data-driven.",
+                         "Creatividad e innovación en diseño gráfico.",
+                         "Programación avanzada y análisis de big data."],
+              correcta: 1 },
+            { pregunta: "¿Qué debe hacer el Gestor de Cobranza 30+ Créditos al identificar un caso crítico o de alto riesgo?",
+              opciones: ["Ignorarlo y esperar a que el cliente pague.",
+                         "Escalar oportunamente casos críticos o de alto riesgo conforme a los protocolos establecidos por la organización.",
+                         "Cancelar el crédito del cliente de inmediato.",
+                         "Aumentar la tasa de interés del crédito."],
+              correcta: 1 },
+            { pregunta: "¿Qué tipo de negociación debe realizar el Gestor de Cobranza 30+ Créditos?",
+              opciones: ["Solo negociaciones estándar para todos los clientes.",
+                         "Negociar reestructuraciones mayores y casos excepcionales.",
+                         "Únicamente cobranza judicial.",
+                         "Ninguna negociación, solo reportar a gerencia."],
+              correcta: 1 },
+            { pregunta: "¿Cuál de las siguientes NO es una responsabilidad del Gestor de Cobranza 30+ Créditos?",
+              opciones: ["Ejecutar contactos estratégicos en casos críticos o de alto riesgo.",
+                         "Realizar análisis de tendencias de cartera (morosidad por sector/producto).",
+                         "Aprobar descuentos superiores al 50% sin autorización de su supervisor.",
+                         "Reportar análisis y recomendaciones al gerente de cobranza."],
+              correcta: 2 },
+            { pregunta: "¿Qué tipo de cobertura debe coordinar el Gestor de Cobranza 30+ Créditos?",
+              opciones: ["Coordinar con otros gestores para optimizar cobertura de cartera.",
+                         "Trabajar de manera aislada sin coordinación.",
+                         "Solo coordinar con el área de marketing.",
+                         "Coordinar únicamente con el área legal."],
+              correcta: 0 },
+            { pregunta: "¿Qué herramienta tecnológica debe utilizar el Gestor de Cobranza 30+ Créditos para realizar su trabajo?",
+              opciones: ["LEGACY app, GPS, WhatsApp y Microsoft Office 365 Enterprise.",
+                         "Únicamente un teléfono fijo tradicional.",
+                         "Software de diseño gráfico y redes sociales.",
+                         "Sistema de marcación automática exclusivamente."],
+              correcta: 0 }
+        ]
+    },
+    {
+        puesto: "EJECUTIVO DE CALL CENTER",
+        preguntas: [
+            { pregunta: "¿Cuál es el objetivo principal del Ejecutivo de Call Center en MaxiKash?",
+              opciones: ["Visitar clientes en sus domicilios para cobrar.",
+                         "Contactar clientes con adeudos para gestionar el pago vía telefónica.",
+                         "Evaluar la solvencia de nuevos solicitantes de crédito.",
+                         "Diseñar estrategias de marketing digital."],
+              correcta: 1 },
+            { pregunta: "¿Qué herramienta utiliza el Ejecutivo de Call Center para realizar llamadas masivas?",
+              opciones: ["Aplicación móvil de campo LEGACY.",
+                         "Sistema de marcación automática o manual.",
+                         "GPS y geolocalización.",
+                         "Plataforma de redes sociales."],
+              correcta: 1 },
+            { pregunta: "¿Hasta qué porcentaje de descuento puede autorizar un Ejecutivo de Call Center en un acuerdo de pago?",
+              opciones: ["Hasta el 10%.", "Hasta el 30%.", "Hasta el 50%.", "No tiene límite, lo decide él."],
+              correcta: 1 },
+            { pregunta: "¿Qué debe hacer el Ejecutivo de Call Center con las promesas de pago?",
+              opciones: ["Confiar en que el cliente cumplirá y no hacer nada.",
+                         "Realizar llamadas de recordatorio y actualizar el estatus al confirmar el pago.",
+                         "Enviar un mensaje de texto solo el día del vencimiento.",
+                         "Reportarlas al área legal directamente."],
+              correcta: 1 },
+            { pregunta: "¿Qué competencia es clave para manejar la presión y la frustración en Call Center?",
+              opciones: ["Visión estratégica.",
+                         "Tolerancia a la frustración y manejo de estrés.",
+                         "Liderazgo transformacional.",
+                         "Innovación."],
+              correcta: 1 },
+            { pregunta: "¿A quién reporta el Ejecutivo de Call Center sus resultados?",
+              opciones: ["Al Gerente de Campo.",
+                         "Al Supervisor de Call Center.",
+                         "Al Director de Cobranza.",
+                         "Al área de Crédito."],
+              correcta: 1 },
+            { pregunta: "Además de llamadas de salida, ¿qué otra atención debe proporcionar el Ejecutivo de Call Center?",
+              opciones: ["Visitas domiciliarias.",
+                         "Atención de llamadas entrantes de clientes para aclarar su situación.",
+                         "Gestión de recuperación de motocicletas.",
+                         "Pruebas de manejo."],
+              correcta: 1 },
+            { pregunta: "¿Qué información debe registrar el Ejecutivo de Call Center en el CRM después de cada interacción?",
+              opciones: ["Solo el monto del adeudo.",
+                         "La oferta realizada, el acuerdo, la promesa de pago y la disposición del cliente.",
+                         "Únicamente si el cliente pagó o no.",
+                         "Los datos personales del cliente sin más detalles."],
+              correcta: 1 },
+            { pregunta: "¿Cómo clasifica el Ejecutivo de Call Center la cartera de clientes?",
+              opciones: ["Por orden alfabético.",
+                         "Por perfil de riesgo y disposición al pago.",
+                         "Por tipo de motocicleta.",
+                         "Por zona geográfica."],
+              correcta: 1 },
+            { pregunta: "¿Cuál es el impacto financiero del puesto de Ejecutivo de Call Center?",
+              opciones: ["Alto, porque define la estrategia de inversiones.",
+                         "Clave para la liquidez de la empresa, reduciendo la cartera vencida.",
+                         "Medio, solo administrativo.",
+                         "Bajo, porque solo toma llamadas."],
+              correcta: 1 }
+        ]
+    },
+    {
+        puesto: "SUPERVISOR DE CAMPO",
+        preguntas: [
+            { pregunta: "¿Cuál es el objetivo principal del Supervisor de Campo en MaxiKash?",
+              opciones: ["Realizar cobranza telefónica.",
+                         "Supervisar a los gestores de campo para asegurar la efectividad de la cobranza.",
+                         "Diseñar la estrategia de crédito.",
+                         "Atender quejas en el call center."],
+              correcta: 1 },
+            { pregunta: "¿Cuántos gestores supervisa aproximadamente un Supervisor de Campo?",
+              opciones: ["5-10 gestores.", "15+ gestores.", "30+ gestores.", "100+ gestores."],
+              correcta: 1 },
+            { pregunta: "¿Qué actividad realiza el Supervisor de Campo para mejorar el desempeño de su equipo?",
+              opciones: ["Realizar acompañamientos en campo y dar retroalimentación.",
+                         "Realizar llamadas de cobro en lugar de los gestores.",
+                         "Diseñar campañas de marketing.",
+                         "Evaluar solicitudes de crédito."],
+              correcta: 0 },
+            { pregunta: "¿Qué herramienta utiliza el Supervisor de Campo para distribuir la cartera?",
+              opciones: ["Sistema de cobranza (CRM) y GPS.",
+                         "Software de diseño.",
+                         "Plataforma de redes sociales.",
+                         "Sistema de marcación automática."],
+              correcta: 0 },
+            { pregunta: "¿A quién reporta el Supervisor de Campo los resultados de su equipo?",
+              opciones: ["Al Gerente de Campo.",
+                         "Al Subdirector de Campo.",
+                         "Al Director de Campo.",
+                         "Al Gerente de Cobranza."],
+              correcta: 0 },
+            { pregunta: "¿Qué competencia es fundamental para resolver conflictos con clientes en el rol de Supervisor de Campo?",
+              opciones: ["Creatividad.",
+                         "Resolución de problemas y comunicación.",
+                         "Programación.",
+                         "Visión estratégica."],
+              correcta: 1 },
+            { pregunta: "¿Cuál de las siguientes NO es una responsabilidad del Supervisor de Campo?",
+              opciones: ["Analizar la productividad diaria de los gestores.",
+                         "Gestionar incidencias operativas.",
+                         "Aprobar créditos a clientes.",
+                         "Capacitar a los gestores en técnicas de negociación."],
+              correcta: 2 },
+            { pregunta: "¿Qué tipo de decisiones puede tomar un Supervisor de Campo?",
+              opciones: ["Decisiones sobre la asignación de cartera y gestión de personal.",
+                         "Decisiones sobre la política de inversiones.",
+                         "Decisiones sobre el diseño de productos.",
+                         "Decisiones sobre la contratación de personal."],
+              correcta: 0 },
+            { pregunta: "¿Qué herramientas de BI utiliza el Supervisor de Campo para sus reportes?",
+              opciones: ["Power BI y Excel.",
+                         "Tableau.",
+                         "Google Data Studio.",
+                         "Ninguna, todo es manual."],
+              correcta: 0 },
+            { pregunta: "¿Cuál es el impacto financiero del puesto de Supervisor de Campo?",
+              opciones: ["Contribuye a la recuperación de cartera.",
+                         "Define el presupuesto anual de la empresa.",
+                         "Gestiona las inversiones de la organización.",
+                         "No tiene impacto financiero."],
+              correcta: 0 }
+        ]
+    },
+    {
+        puesto: "SUBGERENTE DE CAMPO",
+        preguntas: [
+            { pregunta: "¿Cuál es la función principal del Subgerente de Campo en MaxiKash?",
+              opciones: ["Realizar llamadas de cobro.",
+                         "Apoyar a la dirección de campo en la optimización de la cobranza y la productividad.",
+                         "Diseñar la estrategia de crédito.",
+                         "Atender quejas de clientes en el call center."],
+              correcta: 1 },
+            { pregunta: "¿A quién reporta directamente el Subgerente de Campo?",
+              opciones: ["Al Director de Campo.",
+                         "Al Gerente de Campo.",
+                         "Al Subdirector de Cobranza.",
+                         "Al Gerente de Cobranza."],
+              correcta: 1 },
+            { pregunta: "¿Cuántas personas supervisa aproximadamente el Subgerente de Campo?",
+              opciones: ["5-10 personas.", "15-20 personas.", "30+ personas.", "100+ personas."],
+              correcta: 2 },
+            { pregunta: "¿Qué herramienta utiliza el Subgerente de Campo para el análisis de resultados?",
+              opciones: ["CRM y Power BI.",
+                         "Software de diseño.",
+                         "Redes sociales.",
+                         "Sistema de marcación automática."],
+              correcta: 0 },
+            { pregunta: "¿Qué tipo de decisiones puede tomar un Subgerente de Campo?",
+              opciones: ["Decisiones sobre la asignación de cartera y gestión de personal.",
+                         "Decisiones sobre tasas de interés.",
+                         "Decisiones sobre inversiones de la empresa.",
+                         "Ninguna, solo ejecuta órdenes."],
+              correcta: 0 },
+            { pregunta: "¿Cuál es una de las responsabilidades del Subgerente de Campo en cuanto a clientes?",
+              opciones: ["Atender escalamientos de clientes y situaciones complejas.",
+                         "Realizar pruebas de manejo.",
+                         "Gestionar la recuperación de bienes personalmente.",
+                         "Diseñar encuestas de satisfacción."],
+              correcta: 0 },
+            { pregunta: "¿Qué competencia es clave para el rol de Subgerente de Campo?",
+              opciones: ["Creatividad artística.",
+                         "Liderazgo y análisis.",
+                         "Programación en Python.",
+                         "Manejo de redes sociales."],
+              correcta: 1 },
+            { pregunta: "¿Qué actividades realiza el Subgerente de Campo en relación con los supervisores?",
+              opciones: ["Los evalúa y coordina para asegurar el cumplimiento de metas.",
+                         "Los sustituye en visitas de cobro.",
+                         "Los capacita en diseño gráfico.",
+                         "Los asigna a otras áreas."],
+              correcta: 0 },
+            { pregunta: "¿Qué indicadores debe analizar el Subgerente de Campo?",
+              opciones: ["Indicadores de cobranza, productividad y cobertura.",
+                         "Indicadores de ventas de motocicletas.",
+                         "Indicadores de satisfacción de empleados.",
+                         "Indicadores de rotación de personal."],
+              correcta: 0 },
+            { pregunta: "¿Cuál es el impacto del puesto de Subgerente de Campo?",
+              opciones: ["Operativo y financiero, contribuyendo a la recuperación de cartera.",
+                         "Estratégico, definiendo el rumbo de la empresa.",
+                         "Administrativo, sin impacto financiero.",
+                         "Solo de soporte técnico."],
+              correcta: 0 }
+        ]
+    },
+    {
+        puesto: "GERENTE DE CAMPO",
+        preguntas: [
+            { pregunta: "¿Cuál es el objetivo principal del Gerente de Campo en MaxiKash?",
+              opciones: ["Realizar visitas de cobro diarias.",
+                         "Dirigir la operación de campo en cobranza, asegurando efectividad y productividad.",
+                         "Atender llamadas de clientes morosos.",
+                         "Diseñar la estrategia de crédito de la empresa."],
+              correcta: 1 },
+            { pregunta: "¿Qué indicadores debe evaluar el Gerente de Campo para medir el desempeño de su área?",
+              opciones: ["Ventas de motocicletas nuevas.",
+                         "Efectividad de cobro, productividad y cobertura.",
+                         "Número de quejas atendidas por el call center.",
+                         "Tasa de aprobación de créditos."],
+              correcta: 1 },
+            { pregunta: "¿Qué herramienta tecnológica utiliza el Gerente de Campo para optimizar rutas?",
+              opciones: ["Sistemas GPS y CRM.",
+                         "Software de diseño gráfico.",
+                         "Plataforma de redes sociales.",
+                         "Sistema de marcación automática."],
+              correcta: 0 },
+            { pregunta: "¿A quién reporta el Gerente de Campo los resultados de la operación?",
+              opciones: ["Al Director de Campo.",
+                         "Al Subdirector de Campo.",
+                         "Al Gerente de Cobranza.",
+                         "A la Dirección Comercial."],
+              correcta: 0 },
+            { pregunta: "¿Qué competencia es esencial para liderar a supervisores y gestores en el rol de Gerente de Campo?",
+              opciones: ["Creatividad.",
+                         "Liderazgo y gestión de equipos.",
+                         "Programación en SQL.",
+                         "Manejo de conflictos."],
+              correcta: 1 },
+            { pregunta: "¿Cuántos colaboradores gestiona aproximadamente un Gerente de Campo?",
+              opciones: ["10-15 colaboradores.",
+                         "30-50 colaboradores.",
+                         "100+ colaboradores (gestores y supervisores).",
+                         "300+ colaboradores."],
+              correcta: 2 },
+            { pregunta: "¿Qué tipo de decisiones puede tomar un Gerente de Campo sobre la asignación de cartera?",
+              opciones: ["Ninguna, todo lo decide el Director.",
+                         "Decisiones sobre la asignación de cartera, gestión de personal y optimización de rutas.",
+                         "Solo decisiones administrativas de bajo nivel.",
+                         "Decisiones sobre tasas de interés."],
+              correcta: 1 },
+            { pregunta: "¿Cuál de estas actividades NO es parte de las funciones del Gerente de Campo?",
+              opciones: ["Optimizar rutas y asignación de cartera.",
+                         "Atender escalamientos de clientes y situaciones conflictivas.",
+                         "Realizar visitas de cobro a clientes.",
+                         "Liderar y desarrollar al equipo de supervisores."],
+              correcta: 2 },
+            { pregunta: "¿Qué impacto financiero tiene el puesto de Gerente de Campo?",
+              opciones: ["Bajo, solo administrativo.",
+                         "Alto, por la gestión de costos y recuperación de cartera.",
+                         "Medio, relacionado con compras.",
+                         "Nulo, no maneja presupuesto."],
+              correcta: 1 },
+            { pregunta: "¿Qué herramienta de BI utiliza el Gerente de Campo para sus reportes?",
+              opciones: ["Power BI.",
+                         "Tableau.",
+                         "Google Analytics.",
+                         "Adobe Analytics."],
+              correcta: 0 }
+        ]
+    },
+    {
+        puesto: "ANALISTA DE ADMINISTRACIÓN (COBRANZA)",
+        preguntas: [
+            { pregunta: "¿Cuál es la función principal del Analista de Administración en Cobranza?",
+              opciones: ["Realizar visitas de cobro.",
+                         "Apoyar la administración de la cartera de cobranza, analizando indicadores y generando reportes.",
+                         "Atender llamadas de clientes.",
+                         "Diseñar la estrategia de crédito."],
+              correcta: 1 },
+            { pregunta: "¿Qué tipo de análisis realiza el Analista de Administración en Cobranza?",
+              opciones: ["Segmentación de cartera por antigüedad, monto y perfil de riesgo.",
+                         "Análisis de mercado de motocicletas.",
+                         "Análisis de satisfacción de empleados.",
+                         "Análisis de costos de producción."],
+              correcta: 0 },
+            { pregunta: "¿Qué herramienta utiliza el Analista de Administración en Cobranza para generar reportes?",
+              opciones: ["Power BI y Excel.",
+                         "Software de diseño gráfico.",
+                         "Sistema de marcación automática.",
+                         "Plataforma de redes sociales."],
+              correcta: 0 },
+            { pregunta: "¿A quién reporta el Analista de Administración en Cobranza?",
+              opciones: ["Al Gerente de Cobranza.",
+                         "Al Supervisor de Campo.",
+                         "Al Director de Campo.",
+                         "Al Gerente de Marketing."],
+              correcta: 0 },
+            { pregunta: "¿Qué competencia es clave para mantener la calidad de los datos en el rol de Analista de Administración?",
+              opciones: ["Atención al detalle y organización.",
+                         "Creatividad.",
+                         "Liderazgo.",
+                         "Visión estratégica."],
+              correcta: 0 },
+            { pregunta: "¿Cuál de estas actividades NO es responsabilidad del Analista de Administración en Cobranza?",
+              opciones: ["Generar reportes periódicos de cartera vencida.",
+                         "Dar seguimiento a los acuerdos de pago.",
+                         "Realizar llamadas de cobro a clientes.",
+                         "Actualizar la información de los clientes en el CRM."],
+              correcta: 2 },
+            { pregunta: "¿Con qué equipos coordina el Analista de Administración en Cobranza?",
+              opciones: ["Con los equipos de campo y call center.",
+                         "Con el equipo de diseño.",
+                         "Con el equipo de producción.",
+                         "Con el equipo de ventas de motocicletas nuevas."],
+              correcta: 0 },
+            { pregunta: "¿Qué indicadores debe monitorear el Analista de Administración en Cobranza?",
+              opciones: ["Efectividad de cobro y cartera vencida.",
+                         "Volumen de ventas.",
+                         "Rotación de personal.",
+                         "Costos de producción."],
+              correcta: 0 },
+            { pregunta: "¿Qué herramienta de la matriz se menciona específicamente para el Analista de Administración en Cobranza?",
+              opciones: ["Aplicación móvil de campo LEGACY.",
+                         "Excel y CRM.",
+                         "GPS.",
+                         "Sistema de marcación automática."],
+              correcta: 1 },
+            { pregunta: "¿Cuál es el impacto del puesto de Analista de Administración en Cobranza?",
+              opciones: ["Soporte a la gestión de cobranza y recuperación de cartera.",
+                         "Definición de la estrategia comercial.",
+                         "Gestión de inversiones.",
+                         "Liderazgo de equipos grandes."],
+              correcta: 0 }
+        ]
+    },
+    {
+        puesto: "GERENTE DE COBRANZA (COBRANZA)",
+        preguntas: [
+            { pregunta: "¿Cuál es el objetivo principal del Gerente de Cobranza en MaxiKash?",
+              opciones: ["Realizar visitas de cobro.",
+                         "Minimizar la cartera vencida y maximizar la recuperación.",
+                         "Diseñar la estrategia de marketing.",
+                         "Atender quejas de clientes."],
+              correcta: 1 },
+            { pregunta: "¿Cuántos colaboradores gestiona aproximadamente el Gerente de Cobranza?",
+              opciones: ["10-20 colaboradores.",
+                         "50-80 colaboradores.",
+                         "100+ colaboradores.",
+                         "300+ colaboradores."],
+              correcta: 2 },
+            { pregunta: "¿Qué indicadores analiza el Gerente de Cobranza para tomar decisiones?",
+              opciones: ["Cartera vencida y efectividad de cobro.",
+                         "Ventas de motocicletas.",
+                         "Satisfacción de empleados.",
+                         "Costos de producción."],
+              correcta: 0 },
+            { pregunta: "¿Con qué áreas coordina el Gerente de Cobranza para casos complejos?",
+              opciones: ["Legal y campo.",
+                         "Marketing y diseño.",
+                         "Producción y logística.",
+                         "Compras y almacén."],
+              correcta: 0 },
+            { pregunta: "¿Qué competencia es esencial para dirigir el área de Cobranza?",
+              opciones: ["Liderazgo y toma de decisiones.",
+                         "Creatividad artística.",
+                         "Programación.",
+                         "Manejo de redes sociales."],
+              correcta: 0 },
+            { pregunta: "¿A quién reporta el Gerente de Cobranza los resultados?",
+              opciones: ["Al Director de Cobranza.",
+                         "Al Subdirector de Campo.",
+                         "Al Gerente de Campo.",
+                         "A la Dirección Comercial."],
+              correcta: 0 },
+            { pregunta: "¿Qué tipo de decisiones puede tomar un Gerente de Cobranza?",
+              opciones: ["Decisiones sobre políticas de cobro y asignación de recursos.",
+                         "Decisiones sobre tasas de interés de los créditos.",
+                         "Decisiones sobre el diseño de motocicletas.",
+                         "Decisiones sobre la campaña de marketing."],
+              correcta: 0 },
+            { pregunta: "¿Cuál de estas NO es responsabilidad del Gerente de Cobranza?",
+              opciones: ["Evaluar políticas de cobro.",
+                         "Negociar con clientes estratégicos.",
+                         "Realizar acompañamientos en campo (función del supervisor).",
+                         "Implementar mejoras en procesos de cobranza."],
+              correcta: 2 },
+            { pregunta: "¿Qué herramientas utiliza el Gerente de Cobranza para el análisis?",
+              opciones: ["CRM, Power BI y Excel.",
+                         "Software de diseño.",
+                         "Sistema de marcación automática.",
+                         "GPS."],
+              correcta: 0 },
+            { pregunta: "¿Cuál es el impacto financiero del puesto de Gerente de Cobranza?",
+              opciones: ["Alto, gestión de cartera y flujo de efectivo.",
+                         "Bajo, solo administrativo.",
+                         "Medio, relacionado con compras.",
+                         "Nulo."],
+              correcta: 0 }
+        ]
+    },
+    {
+        puesto: "AUXILIAR DE CAMPO",
+        preguntas: [
+            { pregunta: "¿Cuál es la función principal del Auxiliar de Campo en MaxiKash?",
+              opciones: ["Realizar visitas de cobro.",
+                         "Apoyar a los gestores de campo en tareas logísticas y de registro.",
+                         "Atender llamadas de clientes.",
+                         "Diseñar la estrategia de cobranza."],
+              correcta: 1 },
+            { pregunta: "¿Qué actividad realiza el Auxiliar de Campo respecto a la cartera?",
+              opciones: ["Negociar acuerdos de pago con clientes.",
+                         "Coordinar la distribución de cartera y documentación a los gestores.",
+                         "Aprobar créditos.",
+                         "Realizar cobranza telefónica."],
+              correcta: 1 },
+            { pregunta: "¿Qué herramientas tecnológicas utiliza el Auxiliar de Campo?",
+              opciones: ["Aplicación móvil de campo, Excel y CRM.",
+                         "Software de diseño.",
+                         "Sistema de marcación automática.",
+                         "Plataforma de redes sociales."],
+              correcta: 0 },
+            { pregunta: "¿A quién reporta el Auxiliar de Campo?",
+              opciones: ["Al Supervisor de Campo.",
+                         "Al Gerente de Campo.",
+                         "Al Director de Campo.",
+                         "Al Gerente de Cobranza."],
+              correcta: 0 },
+            { pregunta: "¿Qué competencia es fundamental para mantener el orden en el área de Auxiliar de Campo?",
+              opciones: ["Organización y atención al detalle.",
+                         "Creatividad.",
+                         "Liderazgo.",
+                         "Visión estratégica."],
+              correcta: 0 },
+            { pregunta: "¿Cuál de estas NO es responsabilidad del Auxiliar de Campo?",
+              opciones: ["Registrar y actualizar la información de los gestores en el sistema.",
+                         "Gestionar la logística de vehículos y dispositivos móviles.",
+                         "Realizar acompañamientos en campo para evaluar a los gestores.",
+                         "Mantener actualizados los registros y archivos del área."],
+              correcta: 2 },
+            { pregunta: "¿Qué apoyo brinda el Auxiliar de Campo en la planificación?",
+              opciones: ["Planificar rutas y asignación de visitas.",
+                         "Diseñar campañas de marketing.",
+                         "Realizar análisis financieros.",
+                         "Gestionar la nómina."],
+              correcta: 0 },
+            { pregunta: "¿Qué tipo de decisiones puede tomar un Auxiliar de Campo?",
+              opciones: ["Decisiones sobre la priorización de tareas de apoyo.",
+                         "Decisiones sobre acuerdos de pago.",
+                         "Decisiones sobre contratación de personal.",
+                         "Decisiones sobre inversiones."],
+              correcta: 0 },
+            { pregunta: "¿Cuál es el impacto del puesto de Auxiliar de Campo?",
+              opciones: ["Soporte logístico para la cobranza de campo.",
+                         "Definición de la estrategia de cobranza.",
+                         "Gestión de grandes equipos.",
+                         "Impacto financiero alto."],
+              correcta: 0 },
+            { pregunta: "¿Qué herramienta de la matriz se menciona para el Auxiliar de Campo?",
+              opciones: ["Aplicación móvil de campo LEGACY.",
+                         "Power BI.",
+                         "Tableau.",
+                         "Salesforce."],
+              correcta: 0 }
+        ]
+    },
+    {
+        puesto: "DIRECTOR DE CAMPO",
+        preguntas: [
+            { pregunta: "¿Cuál es el objetivo principal del Director de Campo en MaxiKash?",
+              opciones: ["Realizar visitas de cobro.",
+                         "Diseñar la estrategia de campo para maximizar la recuperación de cartera y optimizar costos.",
+                         "Atender llamadas de clientes.",
+                         "Gestionar la nómina."],
+              correcta: 1 },
+            { pregunta: "¿Cuántos colaboradores gestiona aproximadamente el Director de Campo?",
+              opciones: ["50-100 colaboradores.",
+                         "100-200 colaboradores.",
+                         "300+ colaboradores.",
+                         "500+ colaboradores."],
+              correcta: 2 },
+            { pregunta: "¿Qué tipo de decisiones estratégicas toma un Director de Campo?",
+              opciones: ["Decisiones sobre la expansión de cobertura e inversión en tecnología.",
+                         "Decisiones sobre tasas de interés.",
+                         "Decisiones sobre el diseño de motocicletas.",
+                         "Decisiones sobre campañas de marketing."],
+              correcta: 0 },
+            { pregunta: "¿A quién reporta el Director de Campo los resultados?",
+              opciones: ["Al Gerente de Cobranza.",
+                         "Al Subdirector de Campo.",
+                         "A la Dirección General.",
+                         "Al Director Comercial."],
+              correcta: 2 },
+            { pregunta: "¿Qué competencia es clave para definir la visión del área en el rol de Director de Campo?",
+              opciones: ["Visión estratégica e innovación.",
+                         "Creatividad artística.",
+                         "Programación.",
+                         "Manejo de redes sociales."],
+              correcta: 0 },
+            { pregunta: "¿Qué áreas coordina el Director de Campo para la gestión de riesgos?",
+              opciones: ["Legal, Recursos Humanos y Seguridad.",
+                         "Marketing y diseño.",
+                         "Producción y logística.",
+                         "Compras y almacén."],
+              correcta: 0 },
+            { pregunta: "¿Cuál es el impacto financiero del puesto de Director de Campo?",
+              opciones: ["Alto, gestión de costos y recuperación de cartera.",
+                         "Bajo, solo administrativo.",
+                         "Medio, relacionado con compras.",
+                         "Nulo."],
+              correcta: 0 },
+            { pregunta: "¿Qué herramienta utiliza el Director de Campo para el seguimiento de la operación?",
+              opciones: ["Sistemas de gestión, BI, GPS y CRM.",
+                         "Software de diseño.",
+                         "Sistema de marcación automática.",
+                         "Plataforma de redes sociales."],
+              correcta: 0 },
+            { pregunta: "¿Cuál de estas NO es responsabilidad del Director de Campo?",
+              opciones: ["Definir la estrategia de operaciones de campo.",
+                         "Implementar tecnologías para mejorar la eficiencia.",
+                         "Realizar llamadas de cobro a clientes.",
+                         "Gestionar el presupuesto de campo."],
+              correcta: 2 },
+            { pregunta: "¿Qué impacto humano tiene el puesto de Director de Campo?",
+              opciones: ["Gestión de 300+ colaboradores.",
+                         "Gestión de 100+ colaboradores.",
+                         "Gestión de 50+ colaboradores.",
+                         "Gestión de 10+ colaboradores."],
+              correcta: 0 }
+        ]
+    }
+];
+
+// ============================================================
+// LÓGICA DE LA APLICACIÓN
+// ============================================================
+const puestoSelect = document.getElementById('puestoSelect');
+const testContainer = document.getElementById('testContainer');
+const gradeBtn = document.getElementById('gradeBtn');
+const clearBtn = document.getElementById('clearBtn');
+const resetBtn = document.getElementById('resetBtn');
+const actionsArea = document.getElementById('actionsArea');
+const scoreDisplay = document.getElementById('scoreDisplay');
+
+let currentPuestoIndex = 0;
+let graded = false;
+
+// Llenar selector
+function populateSelect() {
+    testData.forEach((item, idx) => {
+        const opt = document.createElement('option');
+        opt.value = idx;
+        opt.textContent = item.puesto;
+        puestoSelect.appendChild(opt);
+    });
+    puestoSelect.selectedIndex = 0;
+    currentPuestoIndex = 0;
+}
+
+// Renderizar preguntas para el puesto seleccionado
+function renderTest(puestoIdx) {
+    const data = testData[puestoIdx];
+    if (!data) {
+        testContainer.innerHTML = '<div class="no-questions">No se encontraron preguntas para este puesto.</div>';
+        actionsArea.style.display = 'none';
+        return;
+    }
+    graded = false;
+    let html = `<div class="test-info">
+        <span>📌 ${data.puesto}</span>
+        <span>📝 ${data.preguntas.length} preguntas</span>
+    </div>`;
+    data.preguntas.forEach((q, idx) => {
+        const qNum = idx + 1;
+        html += `<div class="question-card" id="qcard-${idx}">
+            <div class="q-header">
+                <span class="q-number">${qNum}</span>
+                <span class="q-text">${q.pregunta}</span>
+            </div>
+            <div class="options" id="options-${idx}">`;
+        q.opciones.forEach((opt, optIdx) => {
+            const letter = String.fromCharCode(65 + optIdx); // A, B, C, D
+            html += `<div class="option" id="opt-${idx}-${optIdx}">
+                <input type="radio" name="q${idx}" value="${optIdx}" id="q${idx}-${optIdx}">
+                <label for="q${idx}-${optIdx}"><strong>${letter}.</strong> ${opt}</label>
+            </div>`;
+        });
+        html += `</div>
+            <div class="feedback" id="fb-${idx}"></div>
+        </div>`;
+    });
+    testContainer.innerHTML = html;
+    actionsArea.style.display = 'flex';
+    scoreDisplay.textContent = '0/10';
+
+    // Resetear estado de calificación
+    document.querySelectorAll('.feedback').forEach(f => f.classList.remove('show'));
+    document.querySelectorAll('.option').forEach(o => {
+        o.classList.remove('correct', 'incorrect', 'disabled');
+    });
+}
+
+// Obtener respuestas seleccionadas
+function getSelectedAnswers() {
+    const data = testData[currentPuestoIndex];
+    if (!data) return [];
+    const answers = [];
+    data.preguntas.forEach((_, idx) => {
+        const radios = document.querySelectorAll(`input[name="q${idx}"]`);
+        let selected = null;
+        radios.forEach(r => { if (r.checked) selected = parseInt(r.value); });
+        answers.push(selected);
+    });
+    return answers;
+}
+
+// Calificar test
+function gradeTest() {
+    if (graded) return;
+    const data = testData[currentPuestoIndex];
+    if (!data) return;
+    const answers = getSelectedAnswers();
+    let correctCount = 0;
+    data.preguntas.forEach((q, idx) => {
+        const selected = answers[idx];
+        const isCorrect = (selected === q.correcta);
+        if (isCorrect) correctCount++;
+        // Mostrar feedback
+        const fb = document.getElementById(`fb-${idx}`);
+        fb.classList.add('show');
+        if (selected === null) {
+            fb.innerHTML = '❌ No respondida.';
+            fb.style.borderLeftColor = '#d65a5a';
+        } else if (isCorrect) {
+            fb.innerHTML = '✅ Correcto.';
+            fb.style.borderLeftColor = '#2c9e6b';
+        } else {
+            fb.innerHTML = `❌ Incorrecto. La respuesta correcta era <strong>${String.fromCharCode(65 + q.correcta)}</strong>.`;
+            fb.style.borderLeftColor = '#d65a5a';
+        }
+        // Marcar opciones
+        const optDivs = document.querySelectorAll(`#options-${idx} .option`);
+        optDivs.forEach((div, optIdx) => {
+            div.classList.add('disabled');
+            if (optIdx === q.correcta) {
+                div.classList.add('correct');
+            } else if (optIdx === selected && selected !== null && selected !== q.correcta) {
+                div.classList.add('incorrect');
+            }
+        });
+    });
+    scoreDisplay.textContent = `${correctCount}/${data.preguntas.length}`;
+    graded = true;
+}
+
+// Limpiar respuestas (sin calificar)
+function clearAnswers() {
+    if (graded) {
+        // Si ya calificado, volver a renderizar para limpiar todo
+        renderTest(currentPuestoIndex);
+        return;
+    }
+    // Si no calificado, solo desmarcar radios y ocultar feedbacks
+    document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+    document.querySelectorAll('.feedback').forEach(f => f.classList.remove('show'));
+    scoreDisplay.textContent = '0/10';
+}
+
+// Reiniciar completamente (vuelve al primer puesto)
+function resetAll() {
+    puestoSelect.selectedIndex = 0;
+    currentPuestoIndex = 0;
+    renderTest(0);
+}
+
+// Event listeners
+puestoSelect.addEventListener('change', (e) => {
+    currentPuestoIndex = parseInt(e.target.value);
+    renderTest(currentPuestoIndex);
+});
+
+gradeBtn.addEventListener('click', gradeTest);
+clearBtn.addEventListener('click', clearAnswers);
+resetBtn.addEventListener('click', resetAll);
+
+// Inicializar
+populateSelect();
+renderTest(0);
+</script>
+</body>
+</html>
